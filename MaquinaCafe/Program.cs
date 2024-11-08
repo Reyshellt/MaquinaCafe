@@ -9,9 +9,9 @@ namespace MaquinaCafe
     internal class Program
     {
         // Cantidad inicial de ingredientes
-        static int vasosPequenos = 2;
-        static int vasosMedianos = 5;
-        static int vasosGrandes = 5;
+        static int vasosPequenos = 7;
+        static int vasosMedianos = 10;
+        static int vasosGrandes = 9;
         static int azucarDisponible = 10; // cucharadas
         static int cafeDisponible = 30; // onzas de café
 
@@ -19,63 +19,79 @@ namespace MaquinaCafe
         {
             Console.WriteLine("¡Bienvenido a la máquina dispensadora de café!");
 
-            // Bucle continuo hasta que se agoten los recursos
+            // Bucle continuo hasta que se agoten los recursos o el usuario decida salir
             while (true)
             {
-                if (cafeDisponible == 0)
+                Console.WriteLine("\nSelecciona una opción:");
+                Console.WriteLine("1. Preparar un café");
+                Console.WriteLine("2. Recargar ingredientes");
+                Console.WriteLine("3. Salir");
+                Console.Write("Opción: ");
+                string opcion = Console.ReadLine();
+
+                switch (opcion)
                 {
-                    Console.WriteLine("No hay suficiente café disponible.");
-                    break;
-                }
-
-                if (vasosPequenos == 0 && vasosMedianos == 0 && vasosGrandes == 0)
-                {
-                    Console.WriteLine("No hay vasos disponibles.");
-                    break;
-                }
-
-                if (azucarDisponible == 0)
-                {
-                    Console.WriteLine("No hay suficiente azúcar disponible.");
-                    break;
-                }
-
-                // Selección del tamaño de vaso
-                int tamanoVaso = SeleccionarTamanoVaso();
-                if (tamanoVaso == 0)
-                {
-                    Console.WriteLine("No hay vasos disponibles del tamaño seleccionado.");
-                    continue;
-                }
-
-                // Selección de la cantidad de azúcar
-                int cucharadasAzucar = SeleccionarAzucar();
-                if (cucharadasAzucar > azucarDisponible)
-                {
-                    Console.WriteLine("No hay suficiente azúcar disponible.");
-                    continue;
-                }
-
-                // Verificación de café disponible
-                if (tamanoVaso > cafeDisponible)
-                {
-                    Console.WriteLine("No hay suficiente café disponible.");
-                    continue;
-                }
-
-                // Dispensar café
-                RecogerVaso(tamanoVaso, cucharadasAzucar);
-
-                // Preguntar si el usuario desea otro café
-                Console.WriteLine("\n¿Deseas otro café? (S/N): ");
-                string respuesta = Console.ReadLine().ToUpper();
-
-                if (respuesta != "S")
-                {
-                    Console.WriteLine("Gracias por usar la máquina dispensadora de café. ¡Hasta luego!");
-                    break;
+                    case "1":
+                        PrepararCafe();
+                        break;
+                    case "2":
+                        RecargarIngredientes();
+                        break;
+                    case "3":
+                        Console.WriteLine("Gracias por usar la máquina dispensadora de café. ¡Hasta luego!");
+                        return;
+                    default:
+                        Console.WriteLine("Opción inválida. Inténtalo de nuevo.");
+                        break;
                 }
             }
+        }
+
+        static void PrepararCafe()
+        {
+            if (cafeDisponible == 0)
+            {
+                Console.WriteLine("No hay suficiente café disponible.");
+                return;
+            }
+
+            if (vasosPequenos == 0 && vasosMedianos == 0 && vasosGrandes == 0)
+            {
+                Console.WriteLine("No hay vasos disponibles.");
+                return;
+            }
+
+            if (azucarDisponible == 0)
+            {
+                Console.WriteLine("No hay suficiente azúcar disponible.");
+                return;
+            }
+
+            // Selección del tamaño de vaso
+            int tamanoVaso = SeleccionarTamanoVaso();
+            if (tamanoVaso == 0)
+            {
+                Console.WriteLine("No hay vasos disponibles del tamaño seleccionado.");
+                return;
+            }
+
+            // Selección de la cantidad de azúcar
+            int cucharadasAzucar = SeleccionarAzucar();
+            if (cucharadasAzucar > azucarDisponible)
+            {
+                Console.WriteLine("No hay suficiente azúcar disponible.");
+                return;
+            }
+
+            // Verificación de café disponible
+            if (tamanoVaso > cafeDisponible)
+            {
+                Console.WriteLine("No hay suficiente café disponible.");
+                return;
+            }
+
+            // Dispensar café
+            RecogerVaso(tamanoVaso, cucharadasAzucar);
         }
 
         static int SeleccionarTamanoVaso()
@@ -97,6 +113,10 @@ namespace MaquinaCafe
                         tamano = 3;
                         vasosPequenos--;
                     }
+                    else
+                    {
+                        Console.WriteLine("No hay vasos pequeños disponibles.");
+                    }
                     break;
                 case "2":
                     if (vasosMedianos > 0)
@@ -104,12 +124,20 @@ namespace MaquinaCafe
                         tamano = 5;
                         vasosMedianos--;
                     }
+                    else
+                    {
+                        Console.WriteLine("No hay vasos medianos disponibles.");
+                    }
                     break;
                 case "3":
                     if (vasosGrandes > 0)
                     {
                         tamano = 7;
                         vasosGrandes--;
+                    }
+                    else
+                    {
+                        Console.WriteLine("No hay vasos grandes disponibles.");
                     }
                     break;
                 default:
@@ -144,5 +172,21 @@ namespace MaquinaCafe
             Console.WriteLine("¡Disfruta tu café!");
         }
 
+        static void RecargarIngredientes()
+        {
+            // Reestablece los ingredientes a sus valores iniciales
+            vasosPequenos = 7;
+            vasosMedianos = 10;
+            vasosGrandes = 9;
+            azucarDisponible = 10;
+            cafeDisponible = 30;
+
+            Console.WriteLine("\n--- Ingredientes recargados ---");
+            Console.WriteLine($"Vasos pequeños: {vasosPequenos}");
+            Console.WriteLine($"Vasos medianos: {vasosMedianos}");
+            Console.WriteLine($"Vasos grandes: {vasosGrandes}");
+            Console.WriteLine($"Azúcar disponible: {azucarDisponible} cucharadas");
+            Console.WriteLine($"Café disponible: {cafeDisponible} onzas");
+        }
     }
 }
